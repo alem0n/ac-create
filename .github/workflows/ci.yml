@@ -3,10 +3,12 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   pull_request:
 
 jobs:
   check:
+    name: 质量门禁（Linux：编译与测试）
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,3 +22,45 @@ jobs:
           tool: cargo-audit
       - name: 运行完整质量门禁
         run: make check
+
+  package:
+    name: 便携分发包（${{ matrix.name }}）
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  name: linux-x86_64 }
+          - { os: windows-latest, name: windows-x86_64 }
+          - { os: macos-latest,   name: macos-aarch64 }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: 安装 Rust 工具链
+        uses: dtolnay/rust-toolchain@stable
+      - name: 组装便携分发包（release 二进制 + templates/）
+        shell: bash
+        run: bash etc/build-dist.sh ${{ matrix.name }}
+      - name: 上传分发归档
+        uses: actions/upload-artifact@v4
+        with:
+          name: ac-create-${{ matrix.name }}
+          path: dist/*.tar.gz
+
+  release:
+    name: 发布 GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [check, package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: 下载三平台分发归档
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ac-create-*
+          path: artifacts
+      - name: 发布
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*/*.tar.gz
+          generate_release_notes: true

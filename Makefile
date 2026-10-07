@@ -1,7 +1,7 @@
 # Rust 模板质量门禁：统一入口
 # 使用：make check（提交前必跑，CI 引用同一入口）
 
-.PHONY: check precommit build test fmt fmt-check clippy audit coverage clean
+.PHONY: check precommit build test fmt fmt-check clippy audit coverage dist clean
 
 # 一次性自举：cargo audit 为外部子命令，非 cargo 内建
 #   cargo install cargo-audit
@@ -31,6 +31,9 @@ audit:  ## 依赖漏洞审计（须先 cargo install cargo-audit）
 
 coverage:  ## 附加 target：覆盖率（须先 cargo install cargo-tarpaulin）
 	cargo tarpaulin --fail-under 80
+
+dist:  ## 便携分发包：release 二进制 + templates/（Windows 需在 Git Bash 运行）
+	bash etc/build-dist.sh local
 
 clean:
 	cargo clean

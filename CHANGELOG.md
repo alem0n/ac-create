@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- 将 `create_project.py` 完全移植为 Rust 二进制 `ac-create`（clap CLI）：分层架构 + 端口注入，行为与 Python 版一致。
+- 便携分发约定：二进制与 `templates/` 同级布置；新增 `etc/build-dist.sh` 与 `make dist`，每次构建自动复制 `templates/` 到分发目录。
+- CI 扩展为三平台打包（Linux / Windows / macOS），Linux 承担完整质量门禁；`v*` tag 触发 GitHub Release 汇聚三平台归档。
+
 ## [0.1.0] - 2026-10-07
 
 ### Added

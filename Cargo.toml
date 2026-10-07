@@ -2,8 +2,9 @@
 name = "ac-create"
 version = "0.1.0"
 edition = "2021"
-description = "Rust 项目模板（AI Agent 生成软件工程最佳实践）"
-# 版本以 rust-toolchain.toml 声明的稳定版为准。提交 Cargo.lock。
+description = "项目模板 CLI：按语言与项目名创建新项目并自动替换占位名"
+# 分发约定：二进制与 templates/ 同级布置（见 etc/build-dist.sh 与 README）。
+# 提交 Cargo.lock（可复现构建）。
 
 [dependencies]
 # 日志规范：tracing 为事实标准（tokio 生态，结构化字段 + span）
@@ -11,6 +12,12 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 # 错误处理规范：领域错误类型分层
 thiserror = "2"
+# CLI 参数解析（derive 风格，提供 --help）
+clap = { version = "4", features = ["derive"] }
+
+[dev-dependencies]
+# 测试用临时目录（隔离、独立可运行）
+tempfile = "3"
 
 # ---------------------------------------------------------------------------
 # Clippy 配置（补充 lib.rs 中的 #![warn(...)] 声明）

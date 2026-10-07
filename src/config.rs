@@ -7,16 +7,15 @@ use std::env;
 /// 应用配置（构造后不可变）。
 #[derive(Debug, Clone)]
 pub struct AppConfig {
-    pub name: String,
     pub log_level: String,
 }
 
 impl AppConfig {
     /// 从环境变量加载，缺省值须显式声明。
+    /// 默认 warn：CLI 的用户可读输出由 Reporter 负责，诊断日志须经 RUST_LOG 显式开启。
     pub fn load() -> Self {
         Self {
-            name: env::var("APP_NAME").unwrap_or_else(|_| "world".to_string()),
-            log_level: env::var("RUST_LOG").unwrap_or_else(|_| "info".to_string()),
+            log_level: env::var("RUST_LOG").unwrap_or_else(|_| "warn".to_string()),
         }
     }
 }
@@ -28,7 +27,6 @@ mod tests {
     #[test]
     fn loads_defaults() {
         let config = AppConfig::load();
-        assert_eq!(config.name, "world");
-        assert_eq!(config.log_level, "info");
+        assert_eq!(config.log_level, "warn");
     }
 }

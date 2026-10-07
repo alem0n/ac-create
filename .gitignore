@@ -1,6 +1,12 @@
 # 构建产物
 /target/
+/dist/
 **/*.rs.bk
+
+# 模板负载中的产物与缓存（复制项目时由工具跳过；不进入仓库负载）
+templates/**/__pycache__/
+templates/**/*.pyc
+templates/**/.coverage
 
 # 环境变量与密钥（安全规范：禁止提交）
 .env
