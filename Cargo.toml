@@ -1,0 +1,22 @@
+[package]
+name = "ac-create"
+version = "0.1.0"
+edition = "2021"
+description = "Rust 项目模板（AI Agent 生成软件工程最佳实践）"
+# 版本以 rust-toolchain.toml 声明的稳定版为准。提交 Cargo.lock。
+
+[dependencies]
+# 日志规范：tracing 为事实标准（tokio 生态，结构化字段 + span）
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# 错误处理规范：领域错误类型分层
+thiserror = "2"
+
+# ---------------------------------------------------------------------------
+# Clippy 配置（补充 lib.rs 中的 #![warn(...)] 声明）
+# ---------------------------------------------------------------------------
+[lints.clippy]
+# 复杂度类 lint（高内聚低耦合的内容侧约束）
+cognitive_complexity = "warn"
+module_inception = "warn"
+# 主流派系与惯用法由默认 clippy 规则覆盖。-D warnings 在 CI/Makefile 中统一。
