@@ -80,7 +80,7 @@
 ## 设计决策
 
 - 从 Python 脚本移植为 Rust 二进制（clap CLI）。脚本同级的模板定位改为可执行文件同级 + 当前目录两级回退。
-- 便携分发：`templates/` 每次构建复制到分发目录（`etc/build-dist.sh`），归档为 tar.gz，三平台一致解压布局 `ac-create/{二进制, templates/}`。
+- 便携分发：`templates/` 每次构建复制到分发目录（`etc/build-dist.sh`）。归档格式按平台选择：Windows 为 zip（Windows 系统原生可解），Linux / macOS 为 tar.gz。三平台一致解压布局 `ac-create/{二进制, templates/}`。
 - CI：Linux 承担完整质量门禁（fmt + clippy + test + audit）与测试编译；Linux / Windows / macOS 三平台各自打包。tag（v*）触发 GitHub Release 汇聚三平台归档。
 - 依赖倒置：端口定义在 domain 层，避免 services 绑定具体 IO 实现，单测以假 Runner 与真实文件系统（临时目录）覆盖端到端路径。
 - 锁文件重建失败不阻断创建：与 Python 版一致，工具不可用时回退为文本替换并警告。

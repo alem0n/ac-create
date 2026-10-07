@@ -44,7 +44,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ac-create-${{ matrix.name }}
-          path: dist/*.tar.gz
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
 
   release:
     name: 发布 GitHub Release
@@ -62,5 +64,7 @@ jobs:
       - name: 发布
         uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/*/*.tar.gz
+          files: |
+            artifacts/*/*.tar.gz
+            artifacts/*/*.zip
           generate_release_notes: true

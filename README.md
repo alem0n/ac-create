@@ -43,7 +43,7 @@ ac-create rust my-cool-app --author "作者名"
 从源码构建：
 
 ```bash
-make dist          # 输出 dist/ac-create-<版本>-<平台>.tar.gz
+make dist          # 输出 dist/ac-create-<版本>-<平台>.zip（Windows）/ .tar.gz（Linux、macOS）
 # 或手动：cargo build --release
 ```
 
