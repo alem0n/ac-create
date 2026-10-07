@@ -1,6 +1,6 @@
 [package]
 name = "ac-create"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "项目模板 CLI：按语言与项目名创建新项目并自动替换占位名"
 # 分发约定：二进制与 templates/ 同级布置（见 etc/build-dist.sh 与 README）。

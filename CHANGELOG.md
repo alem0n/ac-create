@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-07
+
 ### Changed
 
 - Windows 分发包归档格式由 tar.gz 改为 zip（Windows 系统原生可解，无需额外工具）。Linux / macOS 保持 tar.gz，解压布局不变。
