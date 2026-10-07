@@ -1,0 +1,12 @@
+# 构建产物
+/target/
+**/*.rs.bk
+
+# 环境变量与密钥（安全规范：禁止提交）
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/

@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# 虚拟环境与锁（uv.lock 应提交，.venv 不提交）
+.venv/
+
+# 测试与类型检查缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.import_linter_cache/
+.coverage
+htmlcov/
+
+# 环境变量与密钥（安全规范：禁止提交）
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/

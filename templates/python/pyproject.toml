@@ -1,0 +1,97 @@
+[project]
+name = "myapp"
+version = "0.1.0"
+description = "Python 项目模板（AI Agent 生成软件工程最佳实践）"
+requires-python = ">=3.12"
+# 依赖与项目元数据的唯一来源。变更依赖后一并提交 uv.lock。
+dependencies = []
+
+[project.optional-dependencies]
+# 开发依赖（含质量门禁工具链）
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
+    "ruff>=0.9",
+    "mypy>=1.14",
+    "pip-audit>=2.9",
+    "import-linter>=2.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/myapp"]
+
+# ---------------------------------------------------------------------------
+# pytest：tests/ 在根目录，与源码分离（pytest 官方 good practices）
+# 覆盖率门禁经 addopts 注入：变更未加测试时即使旧测试全绿也会失败
+# 初始默认阈值 80，随项目成熟度调整
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=myapp --cov-report=term-missing --cov-fail-under=80"
+pythonpath = ["src"]
+
+# ---------------------------------------------------------------------------
+# ruff：lint + 格式化
+# 规则说明：
+# T20 拦截 print/pprint（日志规范）。
+# S 为安全规则（SAST）。
+# BLE001/S110 拦截吞异常（错误处理规范）。
+# ---------------------------------------------------------------------------
+[tool.ruff]
+src = ["src"]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle error
+    "F",    # pyflakes
+    "I",    # isort（导入顺序）
+    "T20",  # flake8-print：拦截 print / pprint
+    "S",    # bandit 安全规则（SAST 层）
+    "BLE001", # blind except：拦截 except Exception 吞异常
+    "S110",   # try-except-pass
+    "UP",   # pyupgrade
+    "B",    # bugbear
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]  # 测试中允许 assert
+
+# ---------------------------------------------------------------------------
+# mypy：严格类型检查
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+
+# ---------------------------------------------------------------------------
+# import-linter：高内聚低耦合的机器校验
+# 分层契约（layers 声明顺序即允许的依赖方向：infrastructure → services → domain）
+#   infrastructure 可导入 services 与 domain。
+#   services 只可导入 domain。
+#   domain 不可导入任何其他层（领域核心无外部依赖）。
+# 组合层（main/config/logging_config）负责依赖注入，不参与契约。
+# 校验：uv run lint-imports
+# ---------------------------------------------------------------------------
+[tool.importlinter]
+root_package = "myapp"
+
+[[tool.importlinter.contracts]]
+name = "layered-architecture"
+type = "layers"
+layers = [
+    "myapp.infrastructure",
+    "myapp.services",
+    "myapp.domain",
+]
+ignore_imports = [
+    "myapp.main -> myapp.config",
+    "myapp.main -> myapp.logging_config",
+]

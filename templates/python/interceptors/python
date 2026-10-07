@@ -1,0 +1,8 @@
+#!/bin/sh
+# 可选 opt-in：uv 纪律的 PATH 拦截器。
+# 直接执行系统 python 时失败并提示改用 uv run python。
+# 用法（启动 agent 前注入 PATH）：
+#   PATH="$(pwd)/interceptors:${PATH}" <启动你的 agent>
+# 注意：本文件为可执行 shell 脚本，不需要 Python 解释器。
+echo "This project uses uv, please use 'uv run python' instead."
+exit 1
